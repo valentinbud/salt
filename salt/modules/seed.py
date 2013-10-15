@@ -10,6 +10,7 @@ import shutil
 import yaml
 import logging
 import tempfile
+from time import sleep
 
 # Import salt libs
 import salt.crypt
@@ -139,6 +140,7 @@ def apply_(path, id_=None, config=None, approve_key=True, install=True):
                   '{0}'.format(mpt))
         res = False
 
+    sleep(1)
     _umount(mpt, ftype)
     return res
 

@@ -68,7 +68,8 @@ def _nic_profile(nic):
 def _gen_config(nicp,
                 cpuset=None,
                 cpushare=None,
-                memory=None):
+                memory=None,
+                mac=None):
     '''
     Generate the config string for an lxc container
     '''
