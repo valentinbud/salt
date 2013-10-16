@@ -140,7 +140,7 @@ def apply_(path, id_=None, config=None, approve_key=True, install=True):
                   '{0}'.format(mpt))
         res = False
 
-    sleep(1)
+    sleep(2)
     _umount(mpt, ftype)
     return res
 

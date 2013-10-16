@@ -9,6 +9,7 @@ Work with linux containers
 import logging
 import tempfile
 import os
+import ast
 
 #import salt libs
 import salt.utils
@@ -86,7 +87,10 @@ def _gen_config(nicp,
         data.append(('lxc.network.type', args.pop('type', 'veth')))
         data.append(('lxc.network.name', dev))
         data.append(('lxc.network.flags', args.pop('flags', 'up')))
-        data.append(('lxc.network.hwaddr', salt.utils.gen_mac()))
+        if mac:
+          data.append(('lxc.network.hwaddr', mac[dev]))
+        else:
+          data.append(('lxc.network.hwaddr', salt.utils.gen_mac()))
         for k, v in args.items():
             data.append(('lxc.network.{0}'.format(k), v))
 
@@ -99,6 +103,7 @@ def init(name,
          memory=None,
          nic='default',
          profile=None,
+         mac=None,
          **kwargs):
     '''
     Initialize a new container.
@@ -126,6 +131,9 @@ def init(name,
     nic
         Network interfaces profile (defined in config or pillar).
 
+    mac
+        Network interface MAC address.
+
     profile
         A LXC profile (defined in config or pillar).
 
@@ -151,7 +159,7 @@ def init(name,
 
     with tempfile.NamedTemporaryFile() as cfile:
         cfile.write(_gen_config(cpuset=cpuset, cpushare=cpushare,
-                                memory=memory, nicp=nicp))
+                                memory=memory, nicp=nicp, mac=mac))
         cfile.flush()
         ret = create(name, config=cfile.name, profile=profile, **kwargs)
     if not ret['created']:
